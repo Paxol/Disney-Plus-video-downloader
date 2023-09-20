@@ -77,7 +77,8 @@ if os.path.exists(DsnpCFG):
 	Config.read(DsnpCFG)
 	DSNP_EMAIL = Config.get("config", "email")
 	DSNP_PASS = Config.get("config", "pass")
-else:
+
+if (len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
 	DSNP_EMAIL = getenv("DSNP_EMAIL")
 	DSNP_PASS = getenv("DSNP_PASSWORD")
 
