@@ -9,6 +9,7 @@ from pydisney.disneyplus_login import LOGIN
 from pydisney.disneyplus_muxer import Muxer
 import pydisney.namehelper as namer 
 from pywidevine.decrypt.wvdecrypt import WvDecrypt
+from os import getenv
 
 parser = argparse.ArgumentParser(description='>>> DISNEY+ <<<')
 parser.add_argument("--url", dest="disneyurl", help="If set, The DSNP viewable URL.")
@@ -77,8 +78,12 @@ if os.path.exists(DsnpCFG):
 	DSNP_EMAIL = Config.get("config", "email")
 	DSNP_PASS = Config.get("config", "pass")
 else:
-	print("\ndsnp.cfg File is missing.")
-	sys.exit()
+	DSNP_EMAIL = getenv("DSNP_EMAIL")
+	DSNP_PASS = getenv("DSNP_PASSWORD")
+
+	if (len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
+		print("\ndsnp.cfg File is missing, add it or use DSNP_EMAIL and DSNP_PASSWORD envs")
+		sys.exit()
 
 global account_info
 account_info = {
