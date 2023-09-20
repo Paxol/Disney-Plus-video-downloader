@@ -3,7 +3,7 @@ cryptography
 ffmpy
 m3u8
 natsort
-protobuf
+protobuf==3.20.*
 pycaption
 pycountry
 pycryptodomex
