@@ -78,11 +78,11 @@ if os.path.exists(DsnpCFG):
 	DSNP_EMAIL = Config.get("config", "email")
 	DSNP_PASS = Config.get("config", "pass")
 
-if (len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
+if (DSNP_EMAIL is None or DSNP_PASS is None or len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
 	DSNP_EMAIL = getenv("DSNP_EMAIL")
 	DSNP_PASS = getenv("DSNP_PASSWORD")
 
-	if (len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
+	if (DSNP_EMAIL is None or DSNP_PASS is None or len(DSNP_EMAIL) == 0 or len(DSNP_PASS) == 0):
 		print("\ndsnp.cfg File is missing, add it or use DSNP_EMAIL and DSNP_PASSWORD envs")
 		sys.exit()
 
