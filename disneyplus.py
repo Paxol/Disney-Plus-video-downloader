@@ -286,6 +286,7 @@ def StripInputInt(inputint):
 	return str(stripped_x)
 
 def do_clean(CurrentName):
+	return
 	try:    
 		os.system('if exist "' + CurrentName + '*.mp4" (del /q /f "' + CurrentName + '*.mp4")')
 		os.system('if exist "' + CurrentName + '*.h265" (del /q /f "' + CurrentName + '*.h265")')
@@ -323,21 +324,21 @@ def PRINT(videoList, AudioList, subtitleList):
 
 def demux(inputName, outputName, inpType):
 
-	if ishevc or ishdr or isuhd and inpType == 'video':
-		os.rename(inputName, outputName)
-		return
+	# if ishevc or ishdr or isuhd and inpType == 'video':
+	os.rename(inputName, outputName)
+	return
 
-	ff = ffmpy.FFmpeg(
-		executable=ffmpegpath,
-		inputs={inputName: None},
-		outputs={outputName: '-c copy'},
-		global_options="-y -hide_banner -loglevel warning"
-		)
+	# ff = ffmpy.FFmpeg(
+	# 	executable=ffmpegpath,
+	# 	inputs={inputName: None},
+	# 	outputs={outputName: '-c copy'},
+	# 	global_options="-y -loglevel warning"
+	# 	)
 
-	ff.run()
-	time.sleep (50.0/1000.0)
+	# ff.run()
+	# time.sleep (50.0/1000.0)
 	
-	return True
+	# return True
 
 def build_commandline_list(KEYS):
 	keycommand = []
@@ -799,7 +800,7 @@ if __name__ == '__main__':
 		print('\nGetting movie metadata & m3u8...')
 		dsnp = DSNP(dsnpid, AuthorizationToken, 'movie', ishdr=ishdr, isuhd=isuhd, ishevc=ishevc)
 		movie = dsnp.load_playlist()
-		url = dsnp.load_info_m3u8(movie['id']['mediaId'], movie['mediaFormat'], args.customquality, isAtmos=isAtmos)
+		url = dsnp.load_info_m3u8(movie['id']['contentId'])
 		print('Done!')
 		name = FixShowName(movie['Title']) + ' ' + str(movie['Year'])
 		main(episodename=name, seasonfolder=None, m3u8Url=url, SHOW=False)
@@ -830,7 +831,7 @@ if __name__ == '__main__':
 					name = f"{showname} S{sizonumbr}E{epsnumbr}"
 					folder = f"{showname} S{sizonumbr}"
 					dsnp_m3u8 = DSNP(DsnyID=False, Token=AuthorizationToken, Type='show', Season=True, ishdr=ishdr, isuhd=isuhd, ishevc=ishevc)
-					url = dsnp_m3u8.load_info_m3u8(ep['mediaId'], ep['mediaFormat'], args.customquality, isAtmos=isAtmos)
+					url = dsnp_m3u8.load_info_m3u8(ep['contentId'])
 					main(episodename=name, seasonfolder=folder, m3u8Url=url, SHOW=True)
 			else:
 				episodes = episodes[start_episode]
@@ -840,7 +841,7 @@ if __name__ == '__main__':
 				name = f"{showname} S{sizonumbr}E{epsnumbr}"
 				folder = f"{showname} S{sizonumbr}"
 				dsnp_m3u8 = DSNP(DsnyID=False, Token=AuthorizationToken, Type='show', Season=True, ishdr=ishdr,  isuhd=isuhd, ishevc=ishevc)
-				url = dsnp_m3u8.load_info_m3u8(episodes['mediaId'], episodes['mediaFormat'], args.customquality, isAtmos=isAtmos)
+				url = dsnp_m3u8.load_info_m3u8(episodes['contentId'])
 				main(episodename=name, seasonfolder=folder, m3u8Url=url, SHOW=True)
 		else:
 			print("looks like you entered wrong disney url movie/show type.")

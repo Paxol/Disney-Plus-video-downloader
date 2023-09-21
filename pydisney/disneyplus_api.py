@@ -1,5 +1,5 @@
 import uuid, requests, json
-
+import webbrowser
 
 class DSNP(object):
 
@@ -25,22 +25,37 @@ class DSNP(object):
 
    			'DmcVideo': 'https://disney.content.edge.bamgrid.com/svc/content/DmcVideoBundle/version/5.1/region/IT/audience/false/maturity/1850/language/it/encodedFamilyId/{family_id}',
 
+			'Player': 'https://www.disneyplus.com/it-it/video/{contentId}',
+
 			'LicenseServer': 'https://edge.bamgrid.com/widevine/v1/obtain-license',
-			'manifest': 'https://us.edge.bamgrid.com/media/{mediaid}/scenarios/{scenarios}'
+			'manifest': 'https://disney.playback.edge.bamgrid.com/media/{mediaid}/scenarios/{scenarios}'
 		}
 		self.scenarios = {
-			"default": "restricted-drm-ctr-sw",
-			"default_hevc": "handset-drm-ctr-h265",
-			"SD": "handset-drm-ctr",
-			"HD": "tv-drm-ctr",
-			"atmos": "tv-drm-ctr-h265-hdr10-atmos",
-			"uhd_sdr": "tv-drm-ctr-h265-atmos",
-			"uhd_hdr": "tv-drm-ctr-h265-hdr10-atmos",
-			"uhd_dv": "tv-drm-ctr-h265-dovi-atmos",
+			# "default": "restricted-drm-ctr-sw",
+			# "default_hevc": "handset-drm-ctr-h265",
+			# "SD": "handset-drm-ctr",
+			# "HD": "tv-drm-ctr",
+			# "atmos": "tv-drm-ctr-h265-hdr10-atmos",
+			# "uhd_sdr": "tv-drm-ctr-h265-atmos",
+			# "uhd_hdr": "tv-drm-ctr-h265-hdr10-atmos",
+			# "uhd_dv": "tv-drm-ctr-h265-dovi-atmos",
+
+			"default": "ctr-regular",
+			"default_hevc": "ctr-regular",
+			"SD": "ctr-regular",
+			"HD": "ctr-regular",
+			"atmos": "ctr-regular",
+			"uhd_sdr": "ctr-regular",
+			"uhd_hdr": "ctr-regular",
+			"uhd_dv": "ctr-regular",
 		}
 
-	def load_info_m3u8(self, mediaId, mediaFormat, quality, isAtmos=False):
-
+	def load_info_m3u8(self, contentId):
+		webbrowser.open_new(self.api['Player'].format(contentId=contentId))
+		url = input('Insert complete stream url: ')
+		return url, None
+		
+		# return "https://vod-ftc-eu-south-1.media.dssott.com/ps01/disney/7ed66d0e-cd6a-4327-b786-2bdd61759220/ctr-all-45b6ec79-91d9-49e8-bf5f-f06ed979874b-92bb8ef0-a6d5-4a45-8c1d-f76d242b278c.m3u8?r=720&v=1&hash=f297b9ea20ee2c396634ec5a216d69be64b8404f", None
 		headers = {
 			"accept": "application/vnd.media-service+json; version=2",
 			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36",
@@ -92,7 +107,7 @@ class DSNP(object):
 			return False
 
 		data = json.loads(resp.text)
-		m3u8_url = data['stream']['complete']
+		m3u8_url = data['stream']['sources'][0]['complete']['url']
 
 		if isAtmos:
 			return m3u8_url, atmos_url
