@@ -800,7 +800,7 @@ if __name__ == '__main__':
 		print('\nGetting movie metadata & m3u8...')
 		dsnp = DSNP(dsnpid, AuthorizationToken, 'movie', ishdr=ishdr, isuhd=isuhd, ishevc=ishevc)
 		movie = dsnp.load_playlist()
-		url = dsnp.load_info_m3u8(movie['id']['contentId'])
+		url = dsnp.load_info_m3u8(movie['id']['contentId'], account_info)
 		print('Done!')
 		name = FixShowName(movie['Title']) + ' ' + str(movie['Year'])
 		main(episodename=name, seasonfolder=None, m3u8Url=url, SHOW=False)
@@ -831,7 +831,7 @@ if __name__ == '__main__':
 					name = f"{showname} S{sizonumbr}E{epsnumbr}"
 					folder = f"{showname} S{sizonumbr}"
 					dsnp_m3u8 = DSNP(DsnyID=False, Token=AuthorizationToken, Type='show', Season=True, ishdr=ishdr, isuhd=isuhd, ishevc=ishevc)
-					url = dsnp_m3u8.load_info_m3u8(ep['contentId'])
+					url = dsnp_m3u8.load_info_m3u8(ep['contentId'], account_info)
 					main(episodename=name, seasonfolder=folder, m3u8Url=url, SHOW=True)
 			else:
 				episodes = episodes[start_episode]
@@ -841,7 +841,7 @@ if __name__ == '__main__':
 				name = f"{showname} S{sizonumbr}E{epsnumbr}"
 				folder = f"{showname} S{sizonumbr}"
 				dsnp_m3u8 = DSNP(DsnyID=False, Token=AuthorizationToken, Type='show', Season=True, ishdr=ishdr,  isuhd=isuhd, ishevc=ishevc)
-				url = dsnp_m3u8.load_info_m3u8(episodes['contentId'])
+				url = dsnp_m3u8.load_info_m3u8(episodes['contentId'], account_info)
 				main(episodename=name, seasonfolder=folder, m3u8Url=url, SHOW=True)
 		else:
 			print("looks like you entered wrong disney url movie/show type.")

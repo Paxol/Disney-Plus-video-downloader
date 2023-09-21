@@ -1,6 +1,6 @@
 import uuid, requests, json
 import webbrowser
-
+from pydisney.disneyplus_scraper import DSNY_Scraper
 class DSNP(object):
 
 	def __init__(self, DsnyID, Token, Type, Season=False, ishdr=False, isuhd=False, ishevc=False):
@@ -50,9 +50,10 @@ class DSNP(object):
 			"uhd_dv": "ctr-regular",
 		}
 
-	def load_info_m3u8(self, contentId):
-		webbrowser.open_new(self.api['Player'].format(contentId=contentId))
-		url = input('Insert complete stream url: ')
+	def load_info_m3u8(self, contentId, account_info):
+		scraper = DSNY_Scraper()
+		url = scraper.login(account_info['email'], account_info['pass'], self.api['Player'].format(contentId=contentId))
+
 		return url, None
 		
 		# return "https://vod-ftc-eu-south-1.media.dssott.com/ps01/disney/7ed66d0e-cd6a-4327-b786-2bdd61759220/ctr-all-45b6ec79-91d9-49e8-bf5f-f06ed979874b-92bb8ef0-a6d5-4a45-8c1d-f76d242b278c.m3u8?r=720&v=1&hash=f297b9ea20ee2c396634ec5a216d69be64b8404f", None
