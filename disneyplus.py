@@ -286,7 +286,6 @@ def StripInputInt(inputint):
 	return str(stripped_x)
 
 def do_clean(CurrentName):
-	return
 	try:    
 		os.system('if exist "' + CurrentName + '*.mp4" (del /q /f "' + CurrentName + '*.mp4")')
 		os.system('if exist "' + CurrentName + '*.h265" (del /q /f "' + CurrentName + '*.h265")')
@@ -323,22 +322,24 @@ def PRINT(videoList, AudioList, subtitleList):
 	return
 
 def demux(inputName, outputName, inpType):
+	if ishevc or ishdr or isuhd and inpType == 'video':
+		os.rename(inputName, outputName)
+		return
 
-	# if ishevc or ishdr or isuhd and inpType == 'video':
-	os.rename(inputName, outputName)
-	return
+	ff = ffmpy.FFmpeg(
+		executable=ffmpegpath,
+		inputs={inputName: None},
+		outputs={outputName: '-c copy'},
+		global_options="-y -hide_banner -loglevel warning"
+		)
 
-	# ff = ffmpy.FFmpeg(
-	# 	executable=ffmpegpath,
-	# 	inputs={inputName: None},
-	# 	outputs={outputName: '-c copy'},
-	# 	global_options="-y -loglevel warning"
-	# 	)
+	try:
+		ff.run()
+		time.sleep (50.0/1000.0)
+	except Exception:
+		os.replace(inputName, outputName)
 
-	# ff.run()
-	# time.sleep (50.0/1000.0)
-	
-	# return True
+	return True
 
 def build_commandline_list(KEYS):
 	keycommand = []
@@ -465,7 +466,10 @@ def download(url, output):
 	for run_num, fragment in enumerate(frags_path):
 		if os.path.isfile(fragment):
 			shutil.copyfileobj(open(fragment,"rb"),openfile)
+			time.sleep(50.0/1000.0)
 		os.remove(fragment)
+		time.sleep(50.0/1000.0)
+		
 		updt(runs, run_num + 1, output)
 	openfile.close()
 	#os.remove(txturls)
